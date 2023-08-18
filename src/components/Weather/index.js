@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currentWeather, searchHistory, displayContent } from "../../redux/useSelectors";
-import { getWeather }from "./helper";
+import { getWeather } from "../../redux/actions";
 
 function Weather() {
     const dispatch = useDispatch();
     const weather = useSelector(currentWeather);
     const weatherHistory = useSelector(searchHistory);
     const { showWeather, errorMessage } = useSelector(displayContent);
-    const [cityInputValue, setCityInputValue] = useState('');
+    const [city, setCity] = useState('');
 
     const searchCity = (event) => {
         if (event.key === 'Enter') {
-            getWeather(dispatch, cityInputValue);
-            setCityInputValue('')
+            dispatch(getWeather(city));
+            setCity('');
         }
-    }
+    };
 
     const searchPresetCity = (event) => {
-        getWeather(dispatch, event.target.innerText);
-    }
+        dispatch(getWeather(event.target.innerText));
+    };
 
     const onChangeCityInput = (event) => {
-        setCityInputValue(event.target.value);
-    }
+        setCity(event.target.value);
+    };
 
     let listOfWeatherHistory = weatherHistory.slice(0, weatherHistory.length - 1);
 
@@ -39,7 +39,7 @@ function Weather() {
                     className='search__input'
                     placeholder='Enter your city'
                     onChange={onChangeCityInput}
-                    value={cityInputValue}
+                    value={city}
                     onKeyDown={searchCity}
                 />
 
